@@ -44,3 +44,12 @@ __pycache__/
 *.pyd
 myenv/
 
+
+# Maven build
+target/
+
+# IntelliJ
+.idea/
+*.iml
+
+
