@@ -1,11 +1,13 @@
 package com.nexus.backend.user.service;
 
+import com.nexus.backend.user.dto.LoginRequest;
 import com.nexus.backend.user.dto.UserRequest;
 import com.nexus.backend.user.dto.UserResponse;
 import com.nexus.backend.user.entity.User;
 import com.nexus.backend.user.enums.UserRole;
 import com.nexus.backend.user.exception.BusinessException;
 import com.nexus.backend.user.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,6 +45,28 @@ public class UserServiceImpl implements UserService {
                 savedUser.getUsername(),
                 savedUser.getEmail()
         );
+    }
+
+    @Override
+    public UserResponse login(LoginRequest request) {
+        User user = userRepository
+                .findByUsername(request.username())
+                .orElseThrow(() ->
+                    new BusinessException(
+                            HttpStatus.NOT_FOUND,
+                            "User not found"
+                    )
+                );
+        if(!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw BusinessException.wrongPassword();
+        }
+
+        return new UserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail()
+        );
+
     }
 
     @Override
