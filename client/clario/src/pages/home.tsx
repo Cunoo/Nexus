@@ -73,6 +73,7 @@ const Home: React.FC = () => {
       <footer className="text-center py-6 text-gray-500 border-t mt-10">
         © 2025 LinguoAI – AI tool
       </footer>
+      <button>Test</button>
     </div>
     </>
   );

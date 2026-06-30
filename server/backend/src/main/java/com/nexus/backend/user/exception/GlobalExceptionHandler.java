@@ -1,5 +1,6 @@
 package com.nexus.backend.user.exception;
 
+import com.nexus.backend.user.dto.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -8,9 +9,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<?> handle(BusinessException e) {
+    public ResponseEntity<ErrorResponse> handle(BusinessException e) {
+
         return ResponseEntity
                 .status(e.getStatus())
-                .body(e.getMessage());
+                .body(
+                        new ErrorResponse(
+                                e.getMessage(),
+                                e.getStatus().value()
+                        )
+                );
     }
 }
