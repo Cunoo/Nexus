@@ -1,5 +1,6 @@
 package com.nexus.backend.user.service;
 
+import com.nexus.backend.user.dto.AuthResponse;
 import com.nexus.backend.user.dto.LoginRequest;
 import com.nexus.backend.user.dto.UserRequest;
 import com.nexus.backend.user.dto.UserResponse;
@@ -7,6 +8,7 @@ import com.nexus.backend.user.entity.User;
 import com.nexus.backend.user.enums.UserRole;
 import com.nexus.backend.user.exception.BusinessException;
 import com.nexus.backend.user.repository.UserRepository;
+import com.nexus.backend.user.security.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,14 +19,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    private final JwtService jwtService;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     @Override
-    public UserResponse createUser(UserRequest userRequest){
+    public AuthResponse createUser(UserRequest userRequest){
 
         if (userRepository.existsByEmail(userRequest.email())) {
             throw BusinessException.conflict("Email already exists");
@@ -40,15 +43,18 @@ public class UserServiceImpl implements UserService {
         user.setRole(UserRole.USER);
 
         User savedUser = userRepository.save(user);
-        return new UserResponse(
-                savedUser.getId(),
-                savedUser.getUsername(),
-                savedUser.getEmail()
-        );
+        String token = jwtService.generateToken(savedUser.getUsername(), String.valueOf(savedUser.getRole()));
+
+        return new AuthResponse(token);
+//        return new UserResponse(
+//                savedUser.getId(),
+//                savedUser.getUsername(),
+//                savedUser.getEmail()
+//        );
     }
 
     @Override
-    public UserResponse login(LoginRequest request) {
+    public AuthResponse login(LoginRequest request) {
         User user = userRepository
                 .findByUsername(request.username())
                 .orElseThrow(() ->
@@ -61,11 +67,15 @@ public class UserServiceImpl implements UserService {
             throw BusinessException.wrongPassword();
         }
 
-        return new UserResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail()
-        );
+        String token = jwtService.generateToken(user.getUsername(), String.valueOf(user.getRole()));
+
+        return new AuthResponse(token);
+
+//        return new UserResponse(
+//                user.getId(),
+//                user.getUsername(),
+//                user.getEmail()
+//        );
 
     }
 

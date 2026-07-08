@@ -1,6 +1,7 @@
 
 package com.nexus.backend.user.controller;
 
+import com.nexus.backend.user.dto.AuthResponse;
 import com.nexus.backend.user.dto.LoginRequest;
 import com.nexus.backend.user.dto.UserRequest;
 import com.nexus.backend.user.dto.UserResponse;
@@ -19,12 +20,12 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public UserResponse register(@RequestBody UserRequest request) {
+    public AuthResponse register(@RequestBody UserRequest request) {
         return userService.createUser(request);
     }
 
     @PostMapping("/login")
-    public UserResponse login(@RequestBody LoginRequest request) {
+    public AuthResponse login(@RequestBody LoginRequest request) {
         return userService.login(request);
     }
 }
