@@ -1,15 +1,26 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Home from './pages/home'
+import { BrowserRouter, Route, Routes, Navigate, Outlet } from 'react-router-dom'
 import RegisterForm from './pages/register/RegisterForm';
 import LoginForm from './pages/login/LoginForm';
+import Dashboard from './pages/dashboard';
+
+const ProtectedRoute = () => {
+  const token = localStorage.getItem('token');
+  return token ? <Outlet /> : <Navigate to="/auth/login" replace />;
+};
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* Public */}
+        {/*<Route path="/" element={<Home />} />*/}
         <Route path="/auth/register" element={<RegisterForm />} />
         <Route path="/auth/login" element={<LoginForm />} />
+
+        {/* Private acccess only with JWT token */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/user/dashboard" element={<Dashboard />} />
+        </Route>
 
       </Routes>
     </BrowserRouter>

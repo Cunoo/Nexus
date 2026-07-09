@@ -6,7 +6,7 @@ import Select from "../components/select/Select";
 import Button from "../components/submitButton/SubmitButton";
 import ParaphraseService from "../api/paraphrase/ParaphraseService";
 import TranslatorParaphraserPanel from "./Translate_and_paraphrase/translator_paraphrase";
-const Home: React.FC = () => {
+const Dashboard: React.FC = () => {
   const [text, setText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [srcLang, setSrcLang] = useState("en");
@@ -61,22 +61,31 @@ const Home: React.FC = () => {
   }
 
   return (
-    <>
-    <div className="bg-gray-50 text-gray-800 min-h-screen">
-      <header className={`bg-white shadow-md py-4 px-8 flex justify-between items-center`}> 
-        <h1 className={`text-blue-600 text-2xl font-extrabold`}>LinguoAI</h1>
-      </header>
-      <main className="max-w-7xl mx-auto py-12 px-6 grid grid-cols-1 md:grid-cols-2 gap-10">
-       <TranslatorParaphraserPanel/>
-      </main>
-      {/*Footer */}
-      <footer className="text-center py-6 text-gray-500 border-t mt-10">
-        © 2025 LinguoAI – AI tool
-      </footer>
-      <button>Test</button>
-    </div>
-    </>
-  );
+  <div className="bg-gray-50 text-gray-800 min-h-screen">
+    <header className="bg-white shadow-md py-4 px-8 flex justify-between items-center"> 
+      <h1 className="text-blue-600 text-2xl font-extrabold">LinguoAI</h1>
+    </header>
+    
+    <main className="max-w-7xl mx-auto py-12 px-6">
+      <TranslatorParaphraserPanel
+        text={text}
+        setText={setText}
+        translatedText={translatedText}
+        srcLang={srcLang}
+        setSrcLang={setSrcLang}
+        dscLang={dscLang}
+        setDscLang={setDscLang}
+        paraphraseText={paraphraseText}
+        languages={languages}
+        onParaphrase={handleParaphrase}
+      />
+    </main>
+
+    <footer className="text-center py-6 text-gray-500 border-t mt-10">
+      © 2026 Nexus – AI tool
+    </footer>
+  </div>
+);
 };
 
-export default Home;
+export default Dashboard;
