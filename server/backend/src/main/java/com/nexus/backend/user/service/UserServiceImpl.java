@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(UserRole.USER);
 
         User savedUser = userRepository.save(user);
-        String token = jwtService.generateToken(savedUser.getUsername(), String.valueOf(savedUser.getRole()));
+        String token = jwtService.generateToken(savedUser.getId(), String.valueOf(savedUser.getRole()));
 
         return new AuthResponse(token);
 //        return new UserResponse(
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
             throw BusinessException.wrongPassword();
         }
 
-        String token = jwtService.generateToken(user.getUsername(), String.valueOf(user.getRole()));
+        String token = jwtService.generateToken(user.getId(), String.valueOf(user.getRole()));
 
         return new AuthResponse(token);
 

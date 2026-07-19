@@ -39,11 +39,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
 
         try {
-            String username = jwtService.extractUsername(token);
+            String userIdStr = jwtService.extractUserId(token);
             String role = jwtService.extractRole(token); // Extract role directly from the token
 
             // If username is present and the user is not authenticated in the current context yet
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (userIdStr != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 if (jwtService.isTokenValid(token)) {
 
@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
 
                     // Create an in-memory UserDetails object without performing a database query
-                    UserDetails userDetails = new User(username, "", List.of(authority));
+                    UserDetails userDetails = new User(userIdStr, "", List.of(authority));
 
                     UsernamePasswordAuthenticationToken auth =
                             new UsernamePasswordAuthenticationToken(

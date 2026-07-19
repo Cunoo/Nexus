@@ -28,10 +28,10 @@ public class JwtService {
     }
 
 
-    public String generateToken(String username, String role) {
+    public String generateToken(Long userId, String role) {
 
         return Jwts.builder()
-                .subject(username)
+                .subject(userId.toString())
                 .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(
@@ -41,7 +41,9 @@ public class JwtService {
                 .compact();
     }
 
-
+    public String extractUserId(String token) {
+        return extractAllClaims(token).getSubject();
+    }
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
