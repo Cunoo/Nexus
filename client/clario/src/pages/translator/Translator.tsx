@@ -69,19 +69,23 @@ const Translator: React.FC<TranslatorProps> = ({
   return (
     <div className="space-y-6 w-full col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
-        <div className="flex gap-4">
-          <Select 
-            value={srcLang} 
-            onChange={setSrcLang} 
-            options={LANGUAGES_LIST} 
-            label="From"
-          />
-          <Select 
-            value={dscLang} 
-            onChange={setDscLang} 
-            options={LANGUAGES_LIST} 
-            label="To"
-          />
+        <div className="grid grid-cols-2 gap-4 w-full">
+          <div className="min-w-0">
+            <Select 
+              value={srcLang} 
+              onChange={setSrcLang} 
+              options={LANGUAGES_LIST} 
+              label="From"
+            />
+          </div>
+          <div className="min-w-0">
+            <Select 
+              value={dscLang} 
+              onChange={setDscLang} 
+              options={LANGUAGES_LIST} 
+              label="To"
+            />
+          </div>
         </div>
         
         <LargeTextInput
