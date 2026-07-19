@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
 
 type LargeTextInputProps = {
   value: string;
@@ -15,12 +16,14 @@ const LargeTextInput: React.FC<LargeTextInputProps> = ({
     disabled = false,
     className = "",
     }) => (
-    <textarea
+    <TextareaAutosize
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
-        className={`w-full p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 resize-y ${className}`}
+        className={`w-full p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 resize-none ${className}`} 
+        minRows={3}
+        maxRows={10}
     />
 );
 
