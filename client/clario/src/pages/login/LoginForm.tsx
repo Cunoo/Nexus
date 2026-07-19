@@ -23,7 +23,7 @@ function LoginForm() {
       try {
         await UserService.loginUser(formData);
         console.log("Login successful! Token is saved.");
-        navigate('/home'); 
+        window.location.href = '/dashboard';
         
       } catch (error: any) {
           const message = axios.isAxiosError(error)
