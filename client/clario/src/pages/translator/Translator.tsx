@@ -36,6 +36,8 @@ const Translator: React.FC<TranslatorProps> = ({
         { value: "cs", label: "Czech" },
         { value: "fr", label: "French" },
         { value: "de", label: "German" },
+        { value: "it", label: "Italian"},
+        { value: "pl", label: "Polish" },
     ];
     const translate = async (value: string, src: string, dst: string) => {
         if (!value.trim() || !src || !dst) return;
