@@ -1,38 +1,42 @@
-
-import axios from 'axios';
-import {API_BACKEND_URL} from "../../../api_list";
-
-const API_URL = API_BACKEND_URL;
+import { api } from "../api"; // Adjust relative path to match where your custom axios instance is located
 
 interface TranslationRequest {
-    src_lang: string;
-    src_text: string;
-    destination_lang: string;
+  sourceLang: string;
+  targetLang: string;
+  text: string;
 }
 
-interface TranslationResponse {
-    source_text: string;
-    source_lang: string;
-    translated_text: string;
-    target_lang: string
+export interface TranslationResponse {
+  id: number | null;
+  sourceLang: string | null;
+  targetLang: string;
+  originalText: string | null;
+  translatedText: string;
+  cached: boolean;
+  modelUsed: string | null;
+  latencyMs: number | null;
+  isFavorite: boolean;
+  createdAt: string;
 }
 
 class TranslationService {
-    async sendText(text: string, srcLang: string = "en", destLang: string = "de"): Promise<TranslationResponse> {
-        try {
-            const payload: TranslationRequest = {
-                src_lang: srcLang,
-                src_text: text,
-                destination_lang: destLang,
-            };
-            const response = await axios.post(`${API_URL}/translateText`, payload);
-            console.log("response", response.data);
-            return response.data;
-        } catch (error) {
-            console.error("Translation error", error);
-            throw error;
-        }
+  async sendText(text: string, sourceLang: string, targetLang: string): Promise<TranslationResponse> {
+    try {
+      const payload: TranslationRequest = {
+        sourceLang,
+        targetLang,
+        text,
+      };
+
+      // Uses custom `api` instance - automatically attaches JWT header from interceptor
+      const response = await api.post<TranslationResponse>("/user/api/translation", payload);
+      
+      return response.data;
+    } catch (error) {
+      console.error("Translation error:", error);
+      throw error;
     }
+  }
 }
 
 export default new TranslationService();

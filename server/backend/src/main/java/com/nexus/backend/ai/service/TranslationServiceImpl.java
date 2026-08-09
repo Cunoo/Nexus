@@ -39,10 +39,8 @@ public class TranslationServiceImpl implements TranslationService {
         if (cached.isPresent()) {
             Translation cacheEntry = cached.get();
 
-            // Update stats asynchronously
-            cacheEntry.setHitCount(cacheEntry.getHitCount() + 1);
-            cacheEntry.setLastAccessedAt(OffsetDateTime.now());
-            asyncTranslationSaver.saveTranslationAsync(cacheEntry);
+            // Update hit count & timestamp asynchronously without re-saving entity relationships
+            asyncTranslationSaver.updateCacheHitStatsAsync(cacheEntry.getId(), OffsetDateTime.now());
 
             // Return cache hit response
             return new TranslationResponse(
@@ -64,11 +62,11 @@ public class TranslationServiceImpl implements TranslationService {
 
         ChatResponse response = chatClient.prompt()
                 .system("""
-                    You are a professional language translator.
-                    Translate the input text accurately into the requested target language.
-                    Do not include conversational filler, extra commentary, or quotes.
-                    Provide ONLY the translated text.
-                """)
+                You are a professional language translator.
+                Translate the input text accurately into the requested target language.
+                Do not include conversational filler, extra commentary, or quotes.
+                Provide ONLY the translated text.
+            """)
                 .user(userSpec -> userSpec
                         .text("Translate from {sourceLang} to {targetLang}:\n\n{text}")
                         .param("sourceLang", request.sourceLang())
@@ -83,6 +81,10 @@ public class TranslationServiceImpl implements TranslationService {
         // 3. EXTRACT AI METADATA
         assert response != null;
         String translatedText = response.getResult().getOutput().getText();
+
+        if (translatedText != null) {
+            translatedText = translatedText.replaceAll("(?i)User Safety:\\s*\\w+", "").trim();
+        }
 
         Integer promptTokens = null;
         Integer completionTokens = null;
@@ -101,7 +103,7 @@ public class TranslationServiceImpl implements TranslationService {
 
         // 4. BUILD & ASYNC SAVE NEW TRANSLATION
         Translation newTranslation = Translation.builder()
-                .user(user)
+                // Do not attach 'user' here to prevent detached entity persistence issues
                 .sourceLang(request.sourceLang())
                 .targetLang(request.targetLang())
                 .inputText(request.text())
@@ -116,7 +118,8 @@ public class TranslationServiceImpl implements TranslationService {
                 .isFavorite(false)
                 .build();
 
-        asyncTranslationSaver.saveTranslationAsync(newTranslation);
+        // Pass the user ID explicitly to the async task
+        asyncTranslationSaver.saveTranslationAsync(newTranslation, user != null ? user.getId() : null);
 
         // 5. RETURN FRESH RESPONSE
         return new TranslationResponse(
