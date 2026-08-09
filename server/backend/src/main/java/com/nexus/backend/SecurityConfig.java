@@ -47,7 +47,8 @@ public class SecurityConfig {
                         // public endpoints
                         .requestMatchers(
                                 "/auth/register",
-                                "/auth/login"
+                                "/auth/login",
+                                "/user/api/paraphrase"
                         ).permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")

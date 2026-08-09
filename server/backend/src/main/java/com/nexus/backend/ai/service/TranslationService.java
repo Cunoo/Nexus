@@ -5,5 +5,5 @@ import com.nexus.backend.ai.dto.TranslationResponse;
 import com.nexus.backend.user.entity.User;
 
 public interface TranslationService {
-    TranslationResponse translateText(User user, TranslationRequest request);
+    TranslationResponse translateText(TranslationRequest request, Long userId);
 }

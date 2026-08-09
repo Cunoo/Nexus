@@ -1,38 +1,40 @@
+import { api } from "../api"; // Upravte cestu k vášmu 'api' súboru podľa potreby
 
-import axios from 'axios';
-import {API_BACKEND_URL} from "../../../api_list";
-
-const API_URL = API_BACKEND_URL;
-
-interface ParaphraseRequest {
-    input_text: string;
-    number_of_sequencies: number;
-    lang: string;
+export interface ParaphraseRequest {
+    text: string;
+    tone?: string;
+  language?: string;
 }
 
-interface ParaphraseResponse {
-    input_text: string;
-    output_texts: string[];
-    number_of_sequencies: number;
+export interface ParaphraseResponse {
+    originalText: string;
+    paraphrasedText: string;
+    tone: string;
+    language: string;
 }
 
-class TranslationService {
-    async sendTextToParaphrase(text: string, srcLang: string, number_of_sequencies: number): Promise<ParaphraseResponse> {
-        try {
-            const payload: ParaphraseRequest = {
-                input_text: text,
-                lang: srcLang,
-                number_of_sequencies: number_of_sequencies,
+class ParaphraseService {
+    async sendTextToParaphrase(
+        text: string, 
+        tone: string = "standard", 
+        language: string = "auto"
+    ): Promise<ParaphraseResponse> {
+    try {
+        const payload: ParaphraseRequest = {
+            text,
+            tone,
+            language,
+        };
 
-            };
-            const response = await axios.post(`${API_URL}/paraphraseText`, payload);
-            console.log("response", response.data);
-            return response.data;
+      // Použitie vlastnej 'api' inštancie namiesto priameho axios
+        const response = await api.post<ParaphraseResponse>("/user/api/paraphrase", payload);
+        
+        return response.data;
         } catch (error) {
-            console.error("Translation error", error);
-            throw error;
+        console.error("Paraphrase error:", error);
+        throw error;
         }
     }
 }
 
-export default new TranslationService();
+export default new ParaphraseService();

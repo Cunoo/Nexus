@@ -4,20 +4,16 @@ import com.nexus.backend.ai.dto.TranslationResponse;
 import com.nexus.backend.ai.dto.TranslationRequest;
 import com.nexus.backend.ai.entity.Translation;
 import com.nexus.backend.ai.repository.TranslationRepository;
-import com.nexus.backend.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.web.bind.annotation.*;
 import com.nexus.backend.ai.util.HashUtil;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
-import static java.awt.SystemColor.text;
 
 @RequiredArgsConstructor
 @Service
@@ -29,7 +25,7 @@ public class TranslationServiceImpl implements TranslationService {
     @Value("${spring.ai.openai.chat.options.model}")
     private String defaultModel;
     @Override
-    public TranslationResponse translateText(User user, TranslationRequest request) {
+    public TranslationResponse translateText(TranslationRequest request, Long userId) {
         String textHash = HashUtil.applySha256(request.text());
 
         // 1. GLOBAL CACHE LOOKUP
@@ -119,7 +115,7 @@ public class TranslationServiceImpl implements TranslationService {
                 .build();
 
         // Pass the user ID explicitly to the async task
-        asyncTranslationSaver.saveTranslationAsync(newTranslation, user != null ? user.getId() : null);
+        asyncTranslationSaver.saveTranslationAsync(newTranslation, userId != null ? userId : null);
 
         // 5. RETURN FRESH RESPONSE
         return new TranslationResponse(

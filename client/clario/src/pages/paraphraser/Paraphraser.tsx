@@ -1,46 +1,96 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import LargeTextInput from "../../components/largeTextInput/LargeTextInput";
 import Select from "../../components/select/Select";
-import Button from "../../components/submitButton/SubmitButton";
-import ParaphraseService from "../../api/paraphrase/ParaphraseService";
 import SubmitButton from "../../components/submitButton/SubmitButton";
-// src/components/Translate_and_paraphrase/translator_paraphrase.tsx
+import ParaphraseService from "../../api/paraphrase/ParaphraseService";
+
 interface ParaphraserPanelProps {
 
     text: string;
     setText: (value: string) => void;
     paraphraseText: string;
+    setParaphraseText: (value: string) => void;
 }
+
+const TONE_OPTIONS = [
+    { value: "standard", label: "Standard" },
+    { value: "formal", label: "Formal" },
+    { value: "casual", label: "Casual" },
+    { value: "academic", label: "Academic" },
+    { value: "fluent", label: "Fluent" },
+];
+
 const ParaphraserPanel: React.FC<ParaphraserPanelProps> = ({
     text,
     setText,
     paraphraseText,
+    setParaphraseText,
 }) => {
-    const handleParaphrase = async (textInput:string, number_of_sequencies: number) => {
-        if (!textInput.trim() || !number_of_sequencies) return;
+    const [tone, setTone] = useState("standard");
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleParaphrase = async () => {
+        if (!text.trim()) return;
+
+        setIsLoading(true);
         try {
-          //const res = await ParaphraseService.sendTextToParaphrase(textInput, lang, number_of_sequencies)
-          //setParaphraseText(res.output_texts.join("\n"));
+        // Volanie API služby vygenerovanej pre náš backend
+        const res = await ParaphraseService.sendTextToParaphrase(text, tone, "auto");
+        setParaphraseText(res.paraphrasedText);
         } catch (err) {
-            console.log(err);
+        console.error("Paraphrase failed:", err);
+        } finally {
+        setIsLoading(false);
         }
-    }
+    };
+
     return (
-        <div className="space-y-6 w-full col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-md space-y-4 flex flex-col justify-between">
-            <div>
-            <h2 className="text-xl font-bold mb-4">Paraphraser</h2>
-            <LargeTextInput value="Enter your text here..."></LargeTextInput>
-            <LargeTextInput value={paraphraseText || "Your paraphrased text will appear here..."}></LargeTextInput>
+        <div className="w-full bg-white p-6 rounded-lg shadow-md space-y-4 flex flex-col justify-between">
+            <div className="space-y-4">
+                <div className="flex justify-between items-center mb-2">
+                <h2 className="text-xl font-bold">Paraphraser</h2>
+                <div className="w-48">
+                    <Select
+                    value={tone}
+                    onChange={setTone}
+                    options={TONE_OPTIONS}
+                    label="Tone"
+                    />
+                </div>
+                </div>
+
+                {/* Vstupný text používateľa */}
+                <LargeTextInput
+                value={text}
+                onChange={setText}
+                placeholder="Enter your text here..."
+                />
+
+                {/* Výstupný parafrazovaný text */}
+                <div className="p-4 bg-gray-50 rounded border min-h-[120px]">
+                <h3 className="font-bold text-sm text-gray-500 mb-1">
+                    Paraphrased Output:
+                </h3>
+                {isLoading ? (
+                    <p className="text-gray-400 italic">Rewriting text...</p>
+                ) : (
+                    <p className="whitespace-pre-wrap">
+                    {paraphraseText || "Your paraphrased text will appear here..."}
+                    </p>
+                )}
+                </div>
             </div>
-            <SubmitButton 
-            type="button" 
-            onClick={() => handleParaphrase(text, 3)}
-            >
-            Paraphrase Text
-            </SubmitButton>
-        </div>
-        </div>
+
+            <div className="pt-4">
+                <SubmitButton
+                type="button"
+                onClick={handleParaphrase}
+                disabled={isLoading || !text.trim()}
+                >
+                {isLoading ? "Paraphrasing..." : "Paraphrase Text"}
+                </SubmitButton>
+            </div>
+            </div>
     );
 };
 

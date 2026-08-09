@@ -31,8 +31,8 @@ const Dashboard: React.FC = () => {
           text={text}
           setText={setText}
           paraphraseText={paraphraseText}
-          //setParaphraseText={setParaphraseText}
-        />
+          setParaphraseText={setParaphraseText} 
+    />
       </main>
 
       <footer className="text-center py-6 text-gray-500 border-t mt-10">
