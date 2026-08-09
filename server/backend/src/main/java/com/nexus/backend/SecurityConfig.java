@@ -47,12 +47,12 @@ public class SecurityConfig {
                         // public endpoints
                         .requestMatchers(
                                 "/auth/register",
-                                "/auth/login",
-                                "user/translation"
+                                "/auth/login"
                         ).permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+
                         // everything else need to authorization
                         .anyRequest().authenticated()
                 )
