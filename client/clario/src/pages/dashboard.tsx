@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ParaphraserPanel from "./paraphraser/Paraphraser";
 import Translator from "./translator/Translator";
 import Header from "./Header";
+import ChatBotWindow from "./ChatBotWindow/ChatBotWindow";
 
 const Dashboard: React.FC = () => {
   const [text, setText] = useState("");
@@ -32,7 +33,11 @@ const Dashboard: React.FC = () => {
           setText={setText}
           paraphraseText={paraphraseText}
           setParaphraseText={setParaphraseText} 
-    />
+        />
+        {/* Chat Bot Windowßß */}
+        <section className="flex justify-center pt-4">
+          <ChatBotWindow />
+        </section>
       </main>
 
       <footer className="text-center py-6 text-gray-500 border-t mt-10">
