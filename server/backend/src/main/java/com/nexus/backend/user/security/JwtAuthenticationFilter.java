@@ -10,10 +10,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -40,19 +42,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             String userIdStr = jwtService.extractUserId(token);
-            String role = jwtService.extractRole(token); // Extract role directly from the token
+            String role = jwtService.extractRole(token);
 
-            // If username is present and the user is not authenticated in the current context yet
             if (userIdStr != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 if (jwtService.isTokenValid(token)) {
 
-                    // Spring Security requires the "ROLE_" prefix when using hasRole("USER") in configuration.
-                    // If you were using hasAuthority("USER"), the prefix wouldn't be needed.
-                    SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
+                    List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-                    // Create an in-memory UserDetails object without performing a database query
-                    UserDetails userDetails = new User(userIdStr, "", List.of(authority));
+                    // fix the ROLE PREFIX
+                    if (role != null && !role.isBlank()) {
+                        String formattedRole = role.startsWith("ROLE_") ? role : "ROLE_" + role;
+                        authorities.add(new SimpleGrantedAuthority(formattedRole));
+                    }
+
+                    UserDetails userDetails = new User(userIdStr, "", authorities);
 
                     UsernamePasswordAuthenticationToken auth =
                             new UsernamePasswordAuthenticationToken(
@@ -61,16 +65,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     userDetails.getAuthorities()
                             );
 
+                    auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             }
         } catch (io.jsonwebtoken.JwtException e) {
-            // If the token is modified, invalid, or expired, clear the context and return a 401 Unauthorized status
             SecurityContextHolder.clearContext();
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write("{\"message\": \"Invalid or expired JWT token\", \"status\": 401}");
-            return; // Stop further request processing and do not pass to the filter chain
+            return;
         }
 
         filterChain.doFilter(request, response);

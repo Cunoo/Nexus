@@ -1,6 +1,7 @@
 package com.nexus.backend;
 
 import com.nexus.backend.user.security.JwtAuthenticationFilter;
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,12 +44,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(auth -> auth
-
+                        .dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.ERROR).permitAll()
                         // public endpoints
                         .requestMatchers(
                                 "/auth/register",
-                                "/auth/login",
-                                "/user/api/paraphrase"
+                                "/auth/login"
                         ).permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
