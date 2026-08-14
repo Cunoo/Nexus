@@ -1,9 +1,30 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import ParaphraserPanel from "./paraphraser/Paraphraser";
 import Translator from "./translator/Translator";
 import Header from "./Header";
 import ChatBotWindow from "./ChatBotWindow/ChatBotWindow";
-import Draggable from 'react-draggable';
+import { Rnd } from "react-rnd";
+
+/**
+ * Default layout configuration for all dashboard panels.
+ * Serves as the initial state and fallback when no saved user preferences exist.
+ * 
+ * Properties:
+ * - x: Distance from the left edge of the container (px)
+ * - y: Distance from the top edge of the container (px)
+ * - width: Panel width (px)
+ * - height: Panel height (px)
+ */
+const INITIAL_LAYOUT = {
+  // Top-left panel: Translator
+  translator: { x: 24, y: 24, width: 600, height: 480 },
+
+  // Top-right panel: Paraphraser
+  paraphraser: { x: 650, y: 24, width: 600, height: 480 },
+
+  // Bottom-right panel: Chatbot
+  chat: { x: 650, y: 520, width: 380, height: 450 },
+};
 
 const Dashboard: React.FC = () => {
   const [text, setText] = useState("");
@@ -12,22 +33,39 @@ const Dashboard: React.FC = () => {
   const [targetLang, setTargetLang] = useState("de");
   const [paraphraseText, setParaphraseText] = useState("");
 
-// Create refs to prevent "not mounted on DragStart" error
-  const translatorRef = useRef(null);
-  const paraphraserRef = useRef(null);
-  const chatRef = useRef(null);
-  
+  // Initializing panel states using default layout constants
+  const [translatorState, setTranslatorState] = useState(INITIAL_LAYOUT.translator);
+  const [paraphraserState, setParaphraserState] = useState(INITIAL_LAYOUT.paraphraser);
+  const [chatState, setChatState] = useState(INITIAL_LAYOUT.chat);
 
   return (
     <div className="bg-gray-50 text-gray-800 min-h-screen relative overflow-hidden">
       <Header />
 
-      {/* Main canvas area */}
-      <main className="relative w-full h-[calc(100vh-140px)] p-6">
+      {/* Main canvas area - serves as the strict parent boundary for all draggable/resizable panels */}
+      <main className="relative w-full h-[calc(100vh-140px)] p-6 overflow-hidden">
         
         {/* 1. TRANSLATOR PANEL */}
-        <Draggable handle=".chat-drag-handle" nodeRef={translatorRef} bounds="parent">
-          <div ref={translatorRef} className="absolute top-6 left-6 z-10">
+        <Rnd
+          bounds="parent"
+          dragHandleClassName="chat-drag-handle"
+          size={{ width: translatorState.width, height: translatorState.height }}
+          position={{ x: translatorState.x, y: translatorState.y }}
+          minWidth={350}
+          minHeight={300}
+          onDragStop={(e, d) => {
+            setTranslatorState((prev) => ({ ...prev, x: d.x, y: d.y }));
+          }}
+          onResizeStop={(e, direction, ref, delta, position) => {
+            setTranslatorState({
+              width: parseInt(ref.style.width, 10),
+              height: parseInt(ref.style.height, 10),
+              ...position,
+            });
+          }}
+          className="z-10"
+        >
+          <div className="w-full h-full">
             <Translator
               text={text}
               setText={setText}
@@ -40,11 +78,29 @@ const Dashboard: React.FC = () => {
               paraphraseText={paraphraseText}
             />
           </div>
-        </Draggable>
+        </Rnd>
 
         {/* 2. PARAPHRASER PANEL */}
-        <Draggable handle=".chat-drag-handle" nodeRef={paraphraserRef} bounds="parent">
-          <div ref={paraphraserRef} className="absolute top-6 left-[650px] z-20">
+        <Rnd
+          bounds="parent"
+          dragHandleClassName="chat-drag-handle"
+          size={{ width: paraphraserState.width, height: paraphraserState.height }}
+          position={{ x: paraphraserState.x, y: paraphraserState.y }}
+          minWidth={350}
+          minHeight={300}
+          onDragStop={(e, d) => {
+            setParaphraserState((prev) => ({ ...prev, x: d.x, y: d.y }));
+          }}
+          onResizeStop={(e, direction, ref, delta, position) => {
+            setParaphraserState({
+              width: parseInt(ref.style.width, 10),
+              height: parseInt(ref.style.height, 10),
+              ...position,
+            });
+          }}
+          className="z-20"
+        >
+          <div className="w-full h-full">
             <ParaphraserPanel
               text={text}
               setText={setText}
@@ -52,16 +108,32 @@ const Dashboard: React.FC = () => {
               setParaphraseText={setParaphraseText} 
             />
           </div>
-        </Draggable>
+        </Rnd>
 
         {/* 3. CHATBOT WINDOW */}
-        {/* Chatbot window with an outer border */}
-        <Draggable handle=".chat-drag-handle" nodeRef={chatRef} bounds="parent">
-          <div ref={chatRef} className="absolute bottom-6 right-6 w-[380px] z-50 shadow-2xl rounded-xl overflow-hidden">
-            {/* A container that wraps the ChatBotWindow and contains a blue bar */}
+        <Rnd
+          bounds="parent"
+          dragHandleClassName="chat-drag-handle"
+          size={{ width: chatState.width, height: chatState.height }}
+          position={{ x: chatState.x, y: chatState.y }}
+          minWidth={300}
+          minHeight={350}
+          onDragStop={(e, d) => {
+            setChatState((prev) => ({ ...prev, x: d.x, y: d.y }));
+          }}
+          onResizeStop={(e, direction, ref, delta, position) => {
+            setChatState({
+              width: parseInt(ref.style.width, 10),
+              height: parseInt(ref.style.height, 10),
+              ...position,
+            });
+          }}
+          className="z-30"
+        >
+          <div className="w-full h-full">
             <ChatBotWindow />
           </div>
-        </Draggable>
+        </Rnd>
 
       </main>
 

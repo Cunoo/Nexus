@@ -143,7 +143,7 @@ const ChatBotWindow: React.FC<ChatBotWindowProps> = ({
     };
 
     return (
-        <div className="flex flex-col h-[500px] w-full max-w-md bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
+        <div className="flex flex-col h-full w-full bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
             {/* Chat Header */}
                 <div className="chat-drag-handle bg-blue-600 text-white p-4 font-semibold text-lg flex items-center justify-between cursor-move select-none">
                     <span>Chat Assistant</span>

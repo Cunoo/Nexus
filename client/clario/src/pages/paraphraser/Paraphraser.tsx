@@ -5,7 +5,6 @@ import SubmitButton from "../../components/submitButton/SubmitButton";
 import ParaphraseService from "../../api/paraphrase/ParaphraseService";
 
 interface ParaphraserPanelProps {
-
     text: string;
     setText: (value: string) => void;
     paraphraseText: string;
@@ -46,7 +45,7 @@ const ParaphraserPanel: React.FC<ParaphraserPanelProps> = ({
 
     return (
             /* Odstránený overflow, pridaná väčšia šírka a výška */
-            <div className="w-[650px] bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col">
+            <div className="w-full h-full bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col">
                 
                 {/* Modrá hlavička cez celú šírku pre drag & drop */}
                 <div className="chat-drag-handle bg-blue-600 text-white p-4 font-semibold text-lg flex items-center justify-between cursor-move select-none w-full">
