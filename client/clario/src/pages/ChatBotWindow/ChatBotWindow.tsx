@@ -126,7 +126,7 @@ const ChatBotWindow: React.FC<ChatBotWindowProps> = ({
             setMessages((prev) =>
                 prev.map((msg) =>
                     msg.id === botMessageId
-                        ? { ...msg, text: "Nepodarilo sa dokončiť odpoveď. Skúsiť znova?" }
+                        ? { ...msg, text: "The response could not be completed. Would you like to try again?" }
                         : msg
                 )
             );
@@ -145,10 +145,11 @@ const ChatBotWindow: React.FC<ChatBotWindowProps> = ({
     return (
         <div className="flex flex-col h-[500px] w-full max-w-md bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
             {/* Chat Header */}
-            <div className="bg-blue-600 text-white p-4 font-semibold text-lg flex items-center justify-between">
-                <span>Chat Assistant</span>
-                <span className={`w-2.5 h-2.5 rounded-full ${isLoading ? "bg-yellow-400 animate-pulse" : "bg-green-400"}`}></span>
-            </div>
+                <div className="chat-drag-handle bg-blue-600 text-white p-4 font-semibold text-lg flex items-center justify-between cursor-move select-none">
+                    <span>Chat Assistant</span>
+                    <span className={`w-2.5 h-2.5 rounded-full ${isLoading ? "bg-yellow-400 animate-pulse" : "bg-green-400"}`}></span>
+                </div>
+
 
             {/* Message List */}
             <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-gray-50">

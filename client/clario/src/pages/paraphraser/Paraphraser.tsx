@@ -45,53 +45,61 @@ const ParaphraserPanel: React.FC<ParaphraserPanelProps> = ({
     };
 
     return (
-        <div className="w-full bg-white p-6 rounded-lg shadow-md space-y-4 flex flex-col justify-between">
-            <div className="space-y-4">
-                <div className="flex justify-between items-center mb-2">
-                <h2 className="text-xl font-bold">Paraphraser</h2>
-                <div className="w-48">
-                    <Select
-                    value={tone}
-                    onChange={setTone}
-                    options={TONE_OPTIONS}
-                    label="Tone"
-                    />
-                </div>
+            /* Odstránený overflow, pridaná väčšia šírka a výška */
+            <div className="w-[650px] bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col">
+                
+                {/* Modrá hlavička cez celú šírku pre drag & drop */}
+                <div className="chat-drag-handle bg-blue-600 text-white p-4 font-semibold text-lg flex items-center justify-between cursor-move select-none w-full">
+                    <span>Paraphraser</span>
+                    <span className="text-xs opacity-75">✥ Drag</span>
                 </div>
 
-                {/* Vstupný text používateľa */}
-                <LargeTextInput
-                value={text}
-                onChange={setText}
-                placeholder="Enter your text here..."
-                />
+                {/* Obsah panelu bez skrolovania */}
+                <div className="p-6 space-y-4 flex flex-col justify-between flex-1">
+                    <div className="space-y-4">
+                        <div className="w-48">
+                            <Select
+                                value={tone}
+                                onChange={setTone}
+                                options={TONE_OPTIONS}
+                                label="Tone"
+                            />
+                        </div>
 
-                {/* Výstupný parafrazovaný text */}
-                <div className="p-4 bg-gray-50 rounded border min-h-[120px]">
-                <h3 className="font-bold text-sm text-gray-500 mb-1">
-                    Paraphrased Output:
-                </h3>
-                {isLoading ? (
-                    <p className="text-gray-400 italic">Rewriting text...</p>
-                ) : (
-                    <p className="whitespace-pre-wrap">
-                    {paraphraseText || "Your paraphrased text will appear here..."}
-                    </p>
-                )}
+                        {/* Vstupný text */}
+                        <LargeTextInput
+                            value={text}
+                            onChange={setText}
+                            placeholder="Enter your text here..."
+                        />
+
+                        {/* Výstupný parafrazovaný text */}
+                        <div className="p-4 bg-gray-50 rounded border min-h-[120px]">
+                            <h3 className="font-bold text-sm text-gray-500 mb-1">
+                                Paraphrased Output:
+                            </h3>
+                            {isLoading ? (
+                                <p className="text-gray-400 italic">Rewriting text...</p>
+                            ) : (
+                                <p className="whitespace-pre-wrap">
+                                    {paraphraseText || "Your paraphrased text will appear here..."}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="pt-2">
+                        <SubmitButton
+                            type="button"
+                            onClick={handleParaphrase}
+                            disabled={isLoading || !text.trim()}
+                        >
+                            {isLoading ? "Paraphrasing..." : "Paraphrase Text"}
+                        </SubmitButton>
+                    </div>
                 </div>
             </div>
-
-            <div className="pt-4">
-                <SubmitButton
-                type="button"
-                onClick={handleParaphrase}
-                disabled={isLoading || !text.trim()}
-                >
-                {isLoading ? "Paraphrasing..." : "Paraphrase Text"}
-                </SubmitButton>
-            </div>
-            </div>
-    );
-};
+        );
+    };
 
 export default ParaphraserPanel;

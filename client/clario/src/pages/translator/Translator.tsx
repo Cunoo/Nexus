@@ -15,6 +15,7 @@ interface TranslatorProps {
   paraphraseText?: string;
 }
 
+
 const LANGUAGES_LIST = [
   { value: "en", label: "English" },
   { value: "sk", label: "Slovak" },
@@ -36,6 +37,7 @@ const Translator: React.FC<TranslatorProps> = ({
   setTargetLang,
 }) => {  
   useEffect(() => {
+
     if (!text.trim() || !sourceLang || !targetLang) {
       setTranslatedText("");
       return;
@@ -55,41 +57,49 @@ const Translator: React.FC<TranslatorProps> = ({
     }, 700);
 
     return () => clearTimeout(handler);
-  }, [text, sourceLang, targetLang, setTranslatedText]);
+    }, [text, sourceLang, targetLang, setTranslatedText]);
 
-  return (
-    <div className="w-full bg-white p-6 rounded-lg shadow-md space-y-4">
-      <div className="grid grid-cols-2 gap-4 w-full">
-        <div className="min-w-0">
-          <Select 
-            value={sourceLang} 
-            onChange={setSourceLang} 
-            options={LANGUAGES_LIST} 
-            label="From"
-          />
+    return (
+        <div className="w-[650px] bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col">
+          {/* Modrá hlavička cez celú šírku pre drag & drop */}
+          <div className="chat-drag-handle bg-blue-600 text-white p-4 font-semibold text-lg flex items-center justify-between cursor-move select-none w-full">
+            <span>Translator</span>
+            <span className="text-xs opacity-75">✥ Drag</span>
+          </div>
+
+          <div className="p-6 space-y-4 flex flex-col justify-between flex-1">
+            <div className="grid grid-cols-2 gap-4 w-full">
+              <div className="min-w-0">
+                <Select 
+                  value={sourceLang} 
+                  onChange={setSourceLang} 
+                  options={LANGUAGES_LIST} 
+                  label="From"
+                />
+              </div>
+              <div className="min-w-0">
+                <Select 
+                  value={targetLang} 
+                  onChange={setTargetLang} 
+                  options={LANGUAGES_LIST} 
+                  label="To"
+                />
+              </div>
+            </div>
+            
+            <LargeTextInput
+              placeholder="Type here to translate..."
+              value={text}
+              onChange={setText}
+            />
+            
+            <div className="mt-4 p-4 bg-gray-50 rounded border min-h-[100px]">
+              <h3 className="font-bold text-sm text-gray-500 mb-1">Translation:</h3>
+              <p>{translatedText || "Translation will appear here..."}</p>
+            </div>
+          </div>
         </div>
-        <div className="min-w-0">
-          <Select 
-            value={targetLang} 
-            onChange={setTargetLang} 
-            options={LANGUAGES_LIST} 
-            label="To"
-          />
-        </div>
-      </div>
-      
-      <LargeTextInput
-        placeholder="Type here to translate..."
-        value={text}
-        onChange={setText}
-      />
-      
-      <div className="mt-4 p-4 bg-gray-50 rounded border min-h-[100px]">
-        <h3 className="font-bold text-sm text-gray-500 mb-1">Translation:</h3>
-        <p>{translatedText || "Translation will appear here..."}</p>
-      </div>
-    </div>
-  );
-};
+      );
+    };
 
 export default Translator;
