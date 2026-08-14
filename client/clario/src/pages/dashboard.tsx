@@ -26,7 +26,7 @@ const Dashboard: React.FC = () => {
       <main className="relative w-full h-[calc(100vh-140px)] p-6">
         
         {/* 1. TRANSLATOR PANEL */}
-        <Draggable handle=".chat-drag-handle" nodeRef={translatorRef}>
+        <Draggable handle=".chat-drag-handle" nodeRef={translatorRef} bounds="parent">
           <div ref={translatorRef} className="absolute top-6 left-6 z-10">
             <Translator
               text={text}
@@ -43,7 +43,7 @@ const Dashboard: React.FC = () => {
         </Draggable>
 
         {/* 2. PARAPHRASER PANEL */}
-        <Draggable handle=".chat-drag-handle" nodeRef={paraphraserRef}>
+        <Draggable handle=".chat-drag-handle" nodeRef={paraphraserRef} bounds="parent">
           <div ref={paraphraserRef} className="absolute top-6 left-[650px] z-20">
             <ParaphraserPanel
               text={text}
@@ -56,7 +56,7 @@ const Dashboard: React.FC = () => {
 
         {/* 3. CHATBOT WINDOW */}
         {/* Chatbot window with an outer border */}
-        <Draggable handle=".chat-drag-handle" nodeRef={chatRef}>
+        <Draggable handle=".chat-drag-handle" nodeRef={chatRef} bounds="parent">
           <div ref={chatRef} className="absolute bottom-6 right-6 w-[380px] z-50 shadow-2xl rounded-xl overflow-hidden">
             {/* A container that wraps the ChatBotWindow and contains a blue bar */}
             <ChatBotWindow />
