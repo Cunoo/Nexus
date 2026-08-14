@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ParaphraserPanel from "./paraphraser/Paraphraser";
 import Translator from "./translator/Translator";
 import Header from "./Header";
@@ -32,11 +32,17 @@ const Dashboard: React.FC = () => {
   const [sourceLang, setSourceLang] = useState("en");
   const [targetLang, setTargetLang] = useState("de");
   const [paraphraseText, setParaphraseText] = useState("");
+  const [translatedTextToParaphraser, setTranslatedTextToParaphraser] = useState(translatedText);
 
   // Initializing panel states using default layout constants
   const [translatorState, setTranslatorState] = useState(INITIAL_LAYOUT.translator);
   const [paraphraserState, setParaphraserState] = useState(INITIAL_LAYOUT.paraphraser);
   const [chatState, setChatState] = useState(INITIAL_LAYOUT.chat);
+
+  useEffect(() => {
+    setTranslatedTextToParaphraser(translatedText);
+  }, [translatedText]);
+
 
   return (
     <div className="bg-gray-50 text-gray-800 min-h-screen relative overflow-hidden">
@@ -102,8 +108,8 @@ const Dashboard: React.FC = () => {
         >
           <div className="w-full h-full">
             <ParaphraserPanel
-              text={text}
-              setText={setText}
+              text={translatedTextToParaphraser}
+              setText={setTranslatedTextToParaphraser}
               paraphraseText={paraphraseText}
               setParaphraseText={setParaphraseText} 
             />
