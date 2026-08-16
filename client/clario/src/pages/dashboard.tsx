@@ -4,6 +4,7 @@ import Translator from "./translator/Translator";
 import Header from "./Header";
 import ChatBotWindow from "./ChatBotWindow/ChatBotWindow";
 import { Rnd } from "react-rnd";
+import { useTranslation } from "react-i18next";
 
 /**
  * Default layout configuration for all dashboard panels.
@@ -33,6 +34,9 @@ const Dashboard: React.FC = () => {
   const [targetLang, setTargetLang] = useState("de");
   const [paraphraseText, setParaphraseText] = useState("");
   const [translatedTextToParaphraser, setTranslatedTextToParaphraser] = useState(translatedText);
+  
+  const { t } = useTranslation();
+
 
   // Initializing panel states using default layout constants
   const [translatorState, setTranslatorState] = useState(INITIAL_LAYOUT.translator);
@@ -144,7 +148,7 @@ const Dashboard: React.FC = () => {
       </main>
 
       <footer className="text-center py-4 text-gray-500 border-t bg-white relative z-30">
-        © 2026 Nexus – AI tool
+        {t("footer.copyright", { year: new Date().getFullYear() })}
       </footer>
     </div>
   );

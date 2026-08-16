@@ -1,7 +1,9 @@
 import React from 'react';
 import Header from '../Header';
+import { useTranslation } from 'react-i18next';
 
 const HomePage: React.FC = () => {
+    const {t} = useTranslation();
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
             {/* Reusable Header */}
@@ -105,7 +107,7 @@ const HomePage: React.FC = () => {
 
             {/* Simple Footer */}
             <footer className="border-t border-gray-200 py-6 text-center text-sm text-gray-500 bg-white">
-                &copy; {new Date().getFullYear()} Nexus AI. All rights reserved.
+                {t("footer.copyright")}
             </footer>
         </div>
     );

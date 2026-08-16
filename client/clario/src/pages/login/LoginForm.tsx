@@ -6,13 +6,14 @@ import SubmitButton from '../../components/submitButton/SubmitButton';
 import type { UserLogin } from '../../api/types/User';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 function LoginForm() {
     const [formData, setFormData] = useState<UserLogin>({
       username: '',
       password: '',
     });
-    
+    const { t } = useTranslation();
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const navigate = useNavigate();
 
@@ -38,26 +39,26 @@ function LoginForm() {
     return (
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm ">
             <h1 className="font-bold text-6xl mb-16 text-center ">
-              Login
+              {t("buttons.login")}
             </h1>
           <form onSubmit={handleSubmit} className="space-y-6">
             <InputField
-              label="Username"
+              label={t("inputs.username")}
               id="username"
               type="text"
-              placeholder="Enter your username"
+              placeholder={t("placeholders.username")}
               value={formData.username}
               onChange={(value) => setFormData({ ...formData, username: value })}
             />
             <InputField
-              label="Password"
+              label={t("inputs.password")}
               id="Password"
               type="password"
-              placeholder="Enter your password"
+              placeholder={t("placeholders.password")}
               value={formData.password}
               onChange={(value) => setFormData({ ...formData, password: value })}
             />
-            <SubmitButton type='submit'>Submit</SubmitButton>
+            <SubmitButton type='submit'>{t("buttons.submit")}</SubmitButton>
           </form>
 
           {/* Vypísanie chybovej hlášky, ak login zlyhal */}

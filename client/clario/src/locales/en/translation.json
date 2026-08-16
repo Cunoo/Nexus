@@ -1,0 +1,80 @@
+{
+    "footer": {
+        "copyright": "© {{year}} Nexus All rights reserved."
+    },
+    "header": {
+        "name": "Nexus AI",
+        "title": "AI Dashboard",
+        "language": "Language"
+    },
+    "buttons": {
+        "home": "Home",
+        "about": "About",
+        "contact": "Contact",
+        "dashboard": "Dashboard",
+        "editProfile": "Edit Profile",
+        "logout": "Logout",
+        "login": "Login",
+        "signup": "Sign Up",
+        "submit": "Submit",
+        "cancel": "Cancel"
+    },
+    "panels": {
+        "translator": "Translator",
+        "paraphraser": "Paraphraser",
+        "chatbot": "AI Assistant",
+        "dragHandle": "✥ Drag"
+    },
+    "chatbot": {
+        "title": "AI Assistant",
+        "firstMessage": "Hello! How can I help you today?",
+        "description": "Ask questions, get answers, and have a conversation with our AI assistant.",
+        "placeholder": "Write a message...",
+        "sendButton": "Send"
+    },
+    "paraphraser": {
+        "title": "Paraphraser",
+        "description": "Paraphrase your text in different styles and tones.",
+        "paraphraseButton": "Paraphrase",
+        "paraphrasedText": "Paraphrased Text",
+        "textInputPlaceholder": "Enter your text here...",
+        "textOutputPlaceholder": "Your paraphrased text will appear here...",
+        "rewritingText": "Rewriting text...",
+        "paraphrasedOutput": "Paraphrased Output:",
+
+        "tone": {
+            "label": "Tone",
+            "options": {
+                "standard": "Standard",
+                "formal": "Formal",
+                "informal": "Informal",
+                "friendly": "Friendly",
+                "academic": "Academic",
+                "fluent": "Fluent",
+                "casual": "Casual"
+            }
+        }
+    },
+    "translator": {
+        "title": "Translator",
+        "description": "Translate your text into different languages.",
+        "from": "From",
+        "to": "To",
+        "sourceLanguage": "Source Language",
+        "targetLanguage": "Target Language",
+        "translateButton": "Translate",
+        "translatedText": "Translated Text",
+        "textInputPlaceholder": "Enter your text here...",
+        "textOutputPlaceholder": "Your translated text will appear here..."
+    },
+    "placeholders": {
+        "username": "Enter your username",
+        "email": "Enter your email",
+        "password": "Enter your password"
+    },
+    "inputs": {
+        "username": "Username",
+        "email": "Email",
+        "password": "Password"
+    }
+}

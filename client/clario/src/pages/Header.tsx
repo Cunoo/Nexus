@@ -3,11 +3,14 @@ import Button from "../components/submitButton/SubmitButton";
 import Avatar from '../components/avatar/Avatar';
 import UserService from '../api/UserService'; 
 import HomePage from './home/HomePage';
+import { useTranslation } from 'react-i18next';
 
 const Header: React.FC = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const { t } = useTranslation();
 
     useEffect(() => {
         setIsLoggedIn(!!localStorage.getItem('token'));
@@ -26,21 +29,21 @@ const Header: React.FC = () => {
     return (
         <header className="bg-white shadow-md py-4 px-8 flex justify-between items-center relative z-50"> 
             <div className="flex items-center gap-8">
-                <h1 className="text-blue-600 text-2xl font-extrabold whitespace-nowrap">Nexus AI</h1>
+                <h1 className="text-blue-600 text-2xl font-extrabold whitespace-nowrap">{t("header.name")}</h1>
                 
                 <nav className="flex gap-4 items-center">
                     <a href="/">
-                        <Button>Home</Button>
+                        <Button>{t("buttons.home")}</Button>
                     </a>
-                    <Button>About</Button>
-                    <Button>Contact</Button>
+                    <Button>{t("buttons.about")}</Button>
+                    <Button>{t("buttons.contact")}</Button>
                 </nav>
             </div>
             <div className="flex items-center">
                 {isLoggedIn ? (
                     <div className="flex items-center gap-4" ref={dropdownRef}>
                         <a href="/user/dashboard">
-                            <Button>Dashboard</Button>
+                            <Button>{t("buttons.dashboard")}</Button>
                         </a>
                         <button 
                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -56,20 +59,20 @@ const Header: React.FC = () => {
                                     href="/edit-profile"
                                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                    Edit Profile
+                                    {t("buttons.editProfile")}
                                 </a>
                                 <button
                                     onClick={() => UserService.logoutUser()}
                                     className="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors font-semibold"
                                 >
-                                    Logout
+                                    {t("buttons.logout")}
                                 </button>
                             </div>
                         )}
                     </div>
                 ) : (
                     <Button onClick={() => window.location.href = '/auth/login'}>
-                        Login
+                        {t("buttons.login")}
                     </Button>
                 )}
             </div>

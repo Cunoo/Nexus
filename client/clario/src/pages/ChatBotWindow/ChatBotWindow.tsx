@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import LargeTextInput from "../../components/largeTextInput/LargeTextInput";
 import SubmitButton from "../../components/submitButton/SubmitButton";
 import { chatApiService } from "../../api/chat/ChatWindowService";
+import { useTranslation } from "react-i18next";
 
 type Message = {
     id: string;
@@ -25,6 +26,8 @@ const ChatBotWindow: React.FC<ChatBotWindowProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
+    const {t} = useTranslation();
+
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
@@ -42,7 +45,7 @@ const ChatBotWindow: React.FC<ChatBotWindowProps> = ({
         const loadHistory = async () => {
             if (!conversationId) {
                 setMessages([
-                    { id: "welcome", sender: "ASSISTANT", text: "Ahoj! Ako ti môžem dnes pomôcť?" }
+                    { id: "welcome", sender: "ASSISTANT", text: t("chatbot.firstMessage") }
                 ]);
                 return;
             }
@@ -146,7 +149,7 @@ const ChatBotWindow: React.FC<ChatBotWindowProps> = ({
         <div className="flex flex-col h-full w-full bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
             {/* Chat Header */}
                 <div className="chat-drag-handle bg-blue-600 text-white p-4 font-semibold text-lg flex items-center justify-between cursor-move select-none">
-                    <span>Chat Assistant</span>
+                    <span>{t("chatbot.title")}</span>
                     <span className={`w-2.5 h-2.5 rounded-full ${isLoading ? "bg-yellow-400 animate-pulse" : "bg-green-400"}`}></span>
                 </div>
 
@@ -187,12 +190,12 @@ const ChatBotWindow: React.FC<ChatBotWindowProps> = ({
                 <LargeTextInput
                     value={inputText}
                     onChange={setInputText}
-                    placeholder="Write a message..."
+                    placeholder={t("chatbot.placeholder")}
                     className="!p-2.5 text-sm rounded-lg"
                 />
                 <div className="flex justify-end">
                     <SubmitButton onClick={handleSend} disabled={!inputText.trim() || isLoading}>
-                        Send
+                        {t("chatbot.sendButton")}
                     </SubmitButton>
                 </div>
             </div>

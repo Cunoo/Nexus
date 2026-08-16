@@ -1,0 +1,14 @@
+{
+    "footer": {
+        "copyright": "© 2026 Nexus – AI nástroj"
+    },
+    "header": {
+        "title": "AI Dashboard",
+        "language": "Jazyk"
+    },
+    "panels": {
+        "translator": "Prekladač",
+        "paraphraser": "Parafrázovač",
+        "chatbot": "AI Asistent"
+    }
+}

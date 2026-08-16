@@ -3,6 +3,7 @@ import LargeTextInput from "../../components/largeTextInput/LargeTextInput";
 import Select from "../../components/select/Select";
 import SubmitButton from "../../components/submitButton/SubmitButton";
 import ParaphraseService from "../../api/paraphrase/ParaphraseService";
+import { useTranslation } from "react-i18next";
 
 interface ParaphraserPanelProps {
     text: string;
@@ -28,6 +29,8 @@ const ParaphraserPanel: React.FC<ParaphraserPanelProps> = ({
     const [tone, setTone] = useState("standard");
     const [isLoading, setIsLoading] = useState(false);
 
+    const { t } = useTranslation();
+
     const handleParaphrase = async () => {
         if (!text.trim()) return;
 
@@ -49,8 +52,8 @@ const ParaphraserPanel: React.FC<ParaphraserPanelProps> = ({
                 
                 {/* Modrá hlavička cez celú šírku pre drag & drop */}
                 <div className="chat-drag-handle bg-blue-600 text-white p-4 font-semibold text-lg flex items-center justify-between cursor-move select-none w-full">
-                    <span>Paraphraser</span>
-                    <span className="text-xs opacity-75">✥ Drag</span>
+                    <span>{t("panels.paraphraser")}</span>
+                    <span className="text-xs opacity-75">{t("panels.dragHandle")}</span>
                 </div>
 
                 {/* Obsah panelu bez skrolovania */}
@@ -75,10 +78,10 @@ const ParaphraserPanel: React.FC<ParaphraserPanelProps> = ({
                         {/* Výstupný parafrazovaný text */}
                         <div className="p-4 bg-gray-50 rounded border min-h-[120px]">
                             <h3 className="font-bold text-sm text-gray-500 mb-1">
-                                Paraphrased Output:
+                                {t("paraphraser.paraphrasedOutput")}
                             </h3>
                             {isLoading ? (
-                                <p className="text-gray-400 italic">Rewriting text...</p>
+                                <p className="text-gray-400 italic">{t("paraphraser.rewritingText")}</p>
                             ) : (
                                 <p className="whitespace-pre-wrap">
                                     {paraphraseText || "Your paraphrased text will appear here..."}
@@ -93,7 +96,7 @@ const ParaphraserPanel: React.FC<ParaphraserPanelProps> = ({
                             onClick={handleParaphrase}
                             disabled={isLoading || !text.trim()}
                         >
-                            {isLoading ? "Paraphrasing..." : "Paraphrase Text"}
+                            {isLoading ? t("paraphraser.paraphrasing") : t("paraphraser.paraphraseButton")}
                         </SubmitButton>
                     </div>
                 </div>
