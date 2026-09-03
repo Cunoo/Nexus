@@ -27,3 +27,5 @@ A Spring Boot backend application providing a conversational interface with supp
 * **Architecture**: Layered Architecture (Controller - Service - Repository - Entity/DTO)
 
 ---
+<img width="2536" height="1209" alt="brave_screenshot_localhost" src="https://github.com/user-attachments/assets/e601b526-c01a-4ca5-ab47-83e6b7bb2a65" />
+<img width="2544" height="1216" alt="Screenshot 2026-09-03 at 23 10 18" src="https://github.com/user-attachments/assets/ceaa7c2a-d967-4e36-884a-ab598d91eb64" />
